@@ -1,0 +1,53 @@
+FORS Instruction Set
+
+0x0n - LOAD
+    [x] 0x00 * * *              NOOP
+    [x] 0x01 p 2m               LOAD m -> p
+    [x] 0x02 p q 0x00           LOAD register q -> p
+    [x] 0x03 p 2a               LOAD from memory address a -> register p
+    [x] 0x04 p q 0x00           LOAD from memory address in register q -> register p
+
+0x10 - STORE
+    [x] 0x10 m 2a               STORE m into memory address a (stoc)
+    [x] 0x11 p 2a               STORE register p into memory address a (stor)
+
+0x20 - ARITHMETIC
+    [x] 0x20 p q r              q & r -> p
+    [x] 0x21 p q r              q | r -> p
+    [x] 0x22 p q r              q ^ r -> p
+    [x] 0x23 p q *              ~q    -> p
+    [x] 0x24 p q r              q + r -> p
+    [x] 0x25 p q r              q - r -> p
+    [x] 0x26 p q r              q * r -> p
+    [x] 0x27 p q r              q / r -> p
+    [x] 0x28 p q r              q % r -> p
+    [ ] 0x29 p q r              q << r -> p
+    [ ] 0x2a p q r              q >> r -> p
+
+0x30 - SIGNED ARITHMETIC
+    [ ] 0x30 p q *              -q    -> p
+    [ ] 0x31 p q r              (signed) q * r -> p
+    [ ] 0x32 p q r              (signed) q / r -> p
+    [ ] 0x29 p q r              (signed) q << r -> p
+    [ ] 0x2a p q r              (signed) q >> r -> p
+
+0x40 - CMP
+    [x] 0x40 p q r              compares q and r
+        q == r                      first bit of p is set to 1
+        q != r                      second bit of p is set to 1
+        q > r                       third bit of p is set to 1
+        q < r                       fourth bit of p is set to 1
+        q >= r                      fifth bit of p is set to 1
+        q <= r                      sixth bit of p is set to 1
+                                    rest of p is set to 0
+    [x] 0x41 p q r              compares q and r (signed)
+
+0x50 - JMP
+    [x] 0x50 0x00 2a            jumps to instruction 2a
+    [x] 0x51 p 2a               jumps to instruction 2a if first bit of p is 1
+    [x] 0x52 0x00 2a            jumps to instruction q
+    [x] 0x53 p q *              jumps to instruction q if first bit of p is 1
+    [x] 0x54 0x00 2a            jumps by instruction 2a
+    [x] 0x55 p 2a               jumps by 2a if first bit of p is 1
+    [x] 0x56 0x00 *             jumps by instruction q
+    [x] 0x57 p *                jumps by q if first bit of p is 1
