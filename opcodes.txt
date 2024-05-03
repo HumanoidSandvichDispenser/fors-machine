@@ -47,7 +47,7 @@ FORS Instruction Set
     [x] 0x51 p 2a               jumps to instruction 2a if first bit of p is 1
     [x] 0x52 0x00 2a            jumps to instruction q
     [x] 0x53 p q *              jumps to instruction q if first bit of p is 1
-    [x] 0x54 0x00 2a            jumps by instruction 2a
+    [x] 0x54 0x00 2a            jumps by 2a
     [x] 0x55 p 2a               jumps by 2a if first bit of p is 1
-    [x] 0x56 0x00 *             jumps by instruction q
-    [x] 0x57 p *                jumps by q if first bit of p is 1
+    [x] 0x56 0x00 *             jumps by q
+    [x] 0x57 p q *              jumps by q if first bit of p is 1
