@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "ForsMachine.Assembler/1.0.0": {
+        "dependencies": {
+          "ForsMachine.Utils": "1.0.0"
+        },
+        "runtime": {
+          "ForsMachine.Assembler.dll": {}
+        }
+      },
+      "ForsMachine.Utils/1.0.0": {
+        "runtime": {
+          "ForsMachine.Utils.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ForsMachine.Assembler/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ForsMachine.Utils/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

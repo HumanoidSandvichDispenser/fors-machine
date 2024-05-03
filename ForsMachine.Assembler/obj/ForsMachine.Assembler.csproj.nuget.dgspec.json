@@ -1,0 +1,130 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/sandvich/git/fors-machine/ForsMachine.Assembler/ForsMachine.Assembler.csproj": {}
+  },
+  "projects": {
+    "/home/sandvich/git/fors-machine/ForsMachine.Assembler/ForsMachine.Assembler.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/sandvich/git/fors-machine/ForsMachine.Assembler/ForsMachine.Assembler.csproj",
+        "projectName": "ForsMachine.Assembler",
+        "projectPath": "/home/sandvich/git/fors-machine/ForsMachine.Assembler/ForsMachine.Assembler.csproj",
+        "packagesPath": "/home/sandvich/.nuget/packages/",
+        "outputPath": "/home/sandvich/git/fors-machine/ForsMachine.Assembler/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/sandvich/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/home/sandvich/git/fors-machine/ForsMachine.Utils/ForsMachine.Utils.csproj": {
+                "projectPath": "/home/sandvich/git/fors-machine/ForsMachine.Utils/ForsMachine.Utils.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.4, 8.0.4]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.104/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/sandvich/git/fors-machine/ForsMachine.Utils/ForsMachine.Utils.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/sandvich/git/fors-machine/ForsMachine.Utils/ForsMachine.Utils.csproj",
+        "projectName": "ForsMachine.Utils",
+        "projectPath": "/home/sandvich/git/fors-machine/ForsMachine.Utils/ForsMachine.Utils.csproj",
+        "packagesPath": "/home/sandvich/.nuget/packages/",
+        "outputPath": "/home/sandvich/git/fors-machine/ForsMachine.Utils/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/sandvich/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.4, 8.0.4]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.104/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
