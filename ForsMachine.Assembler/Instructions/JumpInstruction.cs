@@ -1,4 +1,16 @@
-namespace ForsMachine.Assembler;
+using ForsMachine.Utils;
+using ForsMachine.Assembler.Expressions;
+
+namespace ForsMachine.Assembler.Instructions;
+
+[Flags]
+public enum JumpInstructionType
+{
+    AbsoluteUnconditionalImmediate = 0,
+    Conditional = 1,
+    Relative = 2,
+    Register = 4, // if not register then immediate
+}
 
 public class JumpInstruction : Instruction
 {
@@ -8,8 +20,11 @@ public class JumpInstruction : Instruction
 
     public Register? ConditionalRegister { get; set; }
 
-    public JumpInstruction(AssemblyExpression to,
-        Register? conditionalRegister, bool isRelative)
+    public JumpInstruction(
+        Token<TokenType> source,
+        AssemblyExpression to,
+        Register? conditionalRegister,
+        bool isRelative) : base(source)
     {
         To = to;
         ConditionalRegister = conditionalRegister;

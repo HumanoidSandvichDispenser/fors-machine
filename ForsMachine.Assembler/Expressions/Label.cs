@@ -1,4 +1,7 @@
-namespace ForsMachine.Assembler;
+using ForsMachine.Utils;
+using ForsMachine.Assembler.Instructions;
+
+namespace ForsMachine.Assembler.Expressions;
 
 public class Label : AssemblyExpression
 {
@@ -25,7 +28,9 @@ public class Label : AssemblyExpression
 
     public Instruction? NextInstruction { get; set; }
 
-    public Label(string name, Instruction? next)
+    public Label(Token<TokenType> source,
+        string name,
+        Instruction? next) : base(source)
     {
         Name = name;
         NextInstruction = next;

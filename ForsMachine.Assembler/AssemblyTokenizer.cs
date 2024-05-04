@@ -1,4 +1,5 @@
 using ForsMachine.Utils;
+using System.Text.RegularExpressions;
 
 namespace ForsMachine.Assembler;
 
@@ -7,9 +8,10 @@ public class AssemblyTokenizer : Tokenizer<TokenType>
     private HashSet<string> KEYWORDS = new HashSet<string>
     {
         "def",
-        "undef",
-        "const",
     };
+
+    protected static readonly Regex REGEX_IDENTIFIER_START = new Regex("[_a-zA-Z]");
+    protected static readonly Regex REGEX_IDENTIFIER = new Regex("[_\\-a-zA-Z0-9]");
 
     public override IEnumerable<Token<TokenType>> Lex(CharIterator iterator)
     {

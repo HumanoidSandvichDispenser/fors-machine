@@ -1,4 +1,15 @@
-namespace ForsMachine.Assembler;
+using ForsMachine.Utils;
+using ForsMachine.Assembler.Expressions;
+
+namespace ForsMachine.Assembler.Instructions;
+
+public enum LoadInstructionType
+{
+    Immediate,
+    Register,
+    Address,
+    AddressInRegister,
+}
 
 public class LoadInstruction : Instruction
 {
@@ -8,11 +19,14 @@ public class LoadInstruction : Instruction
 
     public bool IsArgumentAddress { get; set; }
 
-    public LoadInstruction(Register pRegister,
-        AssemblyExpression rhs, bool isArgumentAddress = false)
+    public LoadInstruction(
+        Token<TokenType> source,
+        Register pRegister,
+        AssemblyExpression argument,
+        bool isArgumentAddress) : base(source)
     {
         PRegister = pRegister;
-        Argument = rhs;
+        Argument = argument;
         IsArgumentAddress = isArgumentAddress;
     }
 
@@ -20,6 +34,12 @@ public class LoadInstruction : Instruction
     {
         uint instruction = 0x00;
         ushort arg = 0x0000;
+
+        if (PRegister is null)
+        {
+            throw new NullReferenceException("p-register is not given.");
+        }
+        IList<int> t = new List<int>();
 
         if (Argument is Constant immediate)
         {
@@ -32,6 +52,10 @@ public class LoadInstruction : Instruction
             instruction = 0x02;
             arg = qRegister.Address;
             arg = (ushort)(arg << 8);
+        }
+        else
+        {
+            throw new ArgumentException("Argument given is invalid.");
         }
 
         if (IsArgumentAddress)
