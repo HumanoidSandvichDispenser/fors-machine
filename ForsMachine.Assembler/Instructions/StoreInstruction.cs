@@ -24,30 +24,26 @@ public class StoreInstruction : Instruction
         _address = address;
     }
 
-    public override uint ToInstruction()
+    public override uint ToInstruction(Dictionary<string, uint> symTable)
     {
         uint instruction = 0x10;
         if (_argument is Constant m)
         {
             instruction = 0x10;
-            if (m.Value >= 0x100)
+            uint value = m.Evaluate(symTable);
+            if (value >= 0x100)
             {
                 System.Console.Error.WriteLine(
                     "WARN: Can not store an immediate value >= 0x100.");
             }
-            m.Value &= 0x11; // limit to 1 byte
-            instruction = instruction << 8;
-            instruction |= (ushort)m.Value;
+            instruction = instruction.Insert(value, 8);
         }
         else if (_argument is Register p)
         {
             instruction = 0x11;
-            instruction = instruction << 8;
-            instruction |= p.Address;
+            instruction = instruction.Insert(p.Evaluate(symTable), 8);
         }
 
-        instruction = instruction << 16;
-        instruction |= (ushort)_address.Value;
-        return instruction;
+        return instruction.Insert(_address.Evaluate(symTable), 16);
     }
 }

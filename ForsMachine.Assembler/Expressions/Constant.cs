@@ -2,7 +2,7 @@ using ForsMachine.Utils;
 
 namespace ForsMachine.Assembler.Expressions;
 
-public class Constant : AssemblyExpression, ILoadArgument
+public class Constant : Value, ILoadArgument
 {
     public short Value { get; set; }
 
@@ -10,4 +10,6 @@ public class Constant : AssemblyExpression, ILoadArgument
     {
         Value = value;
     }
+
+    public override uint Evaluate(Dictionary<string, uint> _) => (uint)Value;
 }

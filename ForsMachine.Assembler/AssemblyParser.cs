@@ -40,23 +40,37 @@ public class AssemblyParser : Parser<AssemblyExpression, TokenType>
 
         var token = _iterator.MoveNext();
 
+        if (prev is Symbol symbol && token is not null)
+        {
+            if (token.Type == TokenType.LabelDefinition)
+            {
+                return new Label(symbol.Source, symbol.Name);
+            }
+            else
+            {
+                throw new InterpreterException("Unknown instruction \"" +
+                    token.Type + "\".", token.Line, token.Column);
+            }
+        }
+
         if (prev is null && token?.Type == TokenType.Identifier)
         {
-            // most likely an instruction
-            return MapInstruction(token);
+            var instruction = MapInstruction(token);
+            if (instruction is not null)
+            {
+                return instruction;
+            }
+            else
+            {
+                return NextExpression(new Symbol(token, token.Value));
+            }
         }
-
-        if (prev is null && token?.Type == TokenType.LabelDefinition)
-        {
-            return new Label(token, token.Value, null);
-        }
-
 
         throw new InterpreterException($"Unexpected token '{token?.Value}'.",
             token?.Line ?? 0, token?.Column ?? 0);
     }
 
-    public AssemblyExpression? ScanValue()
+    public Value? ScanValue()
     {
         var token = _iterator.GetNext();
 
@@ -88,11 +102,11 @@ public class AssemblyParser : Parser<AssemblyExpression, TokenType>
                 }
             case TokenType.Identifier:
                 {
-                    throw new NotImplementedException();
+                    return new Symbol(token, token.Value);
                 }
             case TokenType.Label:
                 {
-                    return new Label(token, token.Value, null);
+                    return new Label(token, token.Value);
                 }
             case TokenType.Number:
                 {
@@ -118,7 +132,7 @@ public class AssemblyParser : Parser<AssemblyExpression, TokenType>
         }
     }
 
-    public Instruction MapInstruction(Token<TokenType> token)
+    public Instruction? MapInstruction(Token<TokenType> token)
     {
         switch (token.Value)
         {
@@ -177,8 +191,7 @@ public class AssemblyParser : Parser<AssemblyExpression, TokenType>
                     JumpInstructionType.Conditional,
                     _iterator).Parse();
             default:
-                throw new InterpreterException("Unknown instruction \"" +
-                    token.Type + "\".", token.Line, token.Column);
+                return null;
         }
     }
 }

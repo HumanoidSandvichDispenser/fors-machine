@@ -14,7 +14,9 @@ using ForsMachine.Assembler.Instructions;
 
 string input = @"
 load   $0x02 4096
+labelname:
 load-q $0x00 $0x02
+jump labelname
 ";
 
 try
@@ -31,8 +33,8 @@ try
     AssemblyParser parser = new(new(tokens));
     Stack<Label> labels = new();
 
-    Dictionary<string, Label> labelDict = new();
-    Dictionary<string, Queue<JumpInstruction>> awaitingLabels = new();
+    Dictionary<string, uint> symbolTable = new();
+    //Dictionary<string, Queue<JumpInstruction>> awaitingLabels = new();
     Queue<Instruction> instructions = new();
 
     ushort address = 0;
@@ -52,45 +54,7 @@ try
             {
                 // pop all labels to point instruction to here
                 var nextLabel = labels.Pop();
-                nextLabel.NextInstruction = i;
-                nextLabel.ResolveAddress(i.Address);
-                labelDict.Add(nextLabel.Name, nextLabel);
-
-                // if this label is being waited for, then all jump instructions
-                // waiting for this label will be resolved to this label
-                if (awaitingLabels.ContainsKey(nextLabel.Name))
-                {
-                    var queue = awaitingLabels[nextLabel.Name];
-
-                    while (queue.Count > 0)
-                    {
-                        var jumpInstruction = queue.Dequeue();
-                        jumpInstruction.To = nextLabel;
-                    }
-
-                    awaitingLabels.Remove(nextLabel.Name);
-                }
-            }
-
-            if (i is JumpInstruction jump)
-            {
-                if (jump.To is Label toLabel)
-                {
-                    if (labelDict.ContainsKey(toLabel.Name))
-                    {
-                        jump.To = labelDict[toLabel.Name];
-                    }
-                    else
-                    {
-                        // if our label is not found, then we wait until we find
-                        // a label of the same name
-                        if (!awaitingLabels.ContainsKey(toLabel.Name))
-                        {
-                            awaitingLabels.Add(toLabel.Name, new());
-                        }
-                        awaitingLabels[toLabel.Name].Enqueue(jump);
-                    }
-                }
+                symbolTable.Add(nextLabel.Name, i.Address);
             }
 
             instructions.Enqueue(i);
@@ -100,7 +64,7 @@ try
     while (instructions.Count > 0)
     {
         var instr = instructions.Dequeue();
-        System.Console.WriteLine(instr.ToInstruction().ToString("x8"));
+        System.Console.WriteLine(instr.ToInstruction(symbolTable).ToString("x8"));
     }
 }
 catch (InterpreterException ex)

@@ -11,5 +11,5 @@ public abstract class Instruction : AssemblyExpression
 
     }
 
-    public abstract uint ToInstruction();
+    public abstract uint ToInstruction(Dictionary<string, uint> symbolTable);
 }

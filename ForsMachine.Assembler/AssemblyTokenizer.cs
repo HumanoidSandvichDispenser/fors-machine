@@ -34,18 +34,23 @@ public class AssemblyTokenizer : Tokenizer<TokenType>
                     iterator.MoveNext();
                 }
             }
-            else if (c == '.')
+            else if (c == ':')
             {
-                string labelName = ScanRegex(iterator, REGEX_IDENTIFIER);
-                bool isDefinition = false;
-                if (iterator.GetNext() == ':') {
-                    isDefinition = true;
-                    iterator.MoveNext();
-                }
-                yield return new Token<TokenType>(
-                    isDefinition ? TokenType.LabelDefinition : TokenType.Label,
-                    labelName, line, col);
+                yield return new Token<TokenType>(TokenType.LabelDefinition,
+                    c.ToString(), line, col);
             }
+            //else if (c == '.')
+            //{
+            //    string labelName = ScanRegex(iterator, REGEX_IDENTIFIER);
+            //    bool isDefinition = false;
+            //    if (iterator.GetNext() == ':') {
+            //        isDefinition = true;
+            //        iterator.MoveNext();
+            //    }
+            //    yield return new Token<TokenType>(
+            //        isDefinition ? TokenType.LabelDefinition : TokenType.Label,
+            //        labelName, line, col);
+            //}
             else if (REGEX_IDENTIFIER_START.IsMatch(c.ToString()))
             {
                 string identifier = c + ScanRegex(iterator, REGEX_IDENTIFIER);

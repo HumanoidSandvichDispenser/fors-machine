@@ -14,7 +14,7 @@ public enum JumpInstructionType
 
 public class JumpInstruction : Instruction
 {
-    public AssemblyExpression To { get; set; }
+    public Value To { get; set; }
 
     public bool IsRelative { get; set; }
 
@@ -22,7 +22,7 @@ public class JumpInstruction : Instruction
 
     public JumpInstruction(
         Token<TokenType> source,
-        AssemblyExpression to,
+        Value to,
         Register? conditionalRegister,
         bool isRelative) : base(source)
     {
@@ -31,27 +31,14 @@ public class JumpInstruction : Instruction
         IsRelative = isRelative;
     }
 
-    public override uint ToInstruction()
+    public override uint ToInstruction(Dictionary<string, uint> symTable)
     {
         uint instruction = 0x50;
-        ushort toAddress;
+        uint toAddress = To.Evaluate(symTable);
 
-        if (To is Label label)
+        if (To is Register q)
         {
-            toAddress = label.Address;
-        }
-        else if (To is Constant c)
-        {
-            toAddress = (ushort)c.Value;
-        }
-        else if (To is Register q)
-        {
-            toAddress = q.Address;
             instruction |= 0b0010;
-        }
-        else
-        {
-            throw new Exception("Unknown jump to");
         }
 
         if (IsRelative)
@@ -62,18 +49,15 @@ public class JumpInstruction : Instruction
         if (ConditionalRegister is not null)
         {
             instruction |= 0b0001;
-            instruction = instruction << 8;
-            instruction |= ConditionalRegister.Address;
-            instruction = instruction << 8;
-            instruction |= toAddress;
-            instruction = instruction << 8;
+            var pAddress = ConditionalRegister.Evaluate(symTable);
+            instruction = instruction.Insert(pAddress, 8);
         }
         else
         {
-            instruction = instruction << 16;
-            instruction |= toAddress;
-            instruction = instruction << 8;
+            instruction = instruction.Insert(0, 8);
         }
+
+        instruction = instruction.Insert(toAddress, 16);
 
         return instruction;
     }

@@ -7,7 +7,7 @@ public class LoadInstructionParser : InstructionParser<LoadInstruction>
 {
     private LoadInstructionType _type;
     private Register? _pRegister;
-    private AssemblyExpression? _argument;
+    private Value? _argument;
 
     public LoadInstructionParser(
         Token<TokenType> source,
@@ -45,7 +45,7 @@ public class LoadInstructionParser : InstructionParser<LoadInstruction>
 
     public void ParseArgument()
     {
-        AssemblyExpression? next = ScanValue();
+        Value? next = ScanValue();
 
         if (next is null)
         {

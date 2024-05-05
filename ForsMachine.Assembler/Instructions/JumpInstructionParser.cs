@@ -6,7 +6,7 @@ namespace ForsMachine.Assembler.Instructions;
 public class JumpInstructionParser : InstructionParser<JumpInstruction>
 {
     private JumpInstructionType _type;
-    private AssemblyExpression? _to;
+    private Value? _to;
     private Register? _condition;
     private bool _isRelative;
 
@@ -48,7 +48,7 @@ public class JumpInstructionParser : InstructionParser<JumpInstruction>
 
     public void ParseTo()
     {
-        AssemblyExpression? next = ScanValue();
+        Value? next = ScanValue();
         if (next is null)
         {
             FailFromInvalidArguments("Expected condition register.", _source);
@@ -64,21 +64,10 @@ public class JumpInstructionParser : InstructionParser<JumpInstruction>
             }
             else
             {
-                if (next is not Constant)
+                if (next is Register)
                 {
-                    if (next is Label)
-                    {
-                        if (_type.HasFlag(JumpInstructionType.Relative))
-                        {
-                            FailFromInvalidArguments("Expected constant value.",
-                                next.Source);
-                        }
-                    }
-                    else
-                    {
-                        FailFromInvalidArguments("Expected valid jump target.",
-                            next.Source);
-                    }
+                    FailFromInvalidArguments("Expected valid jump target.",
+                        next.Source);
                 }
             }
 

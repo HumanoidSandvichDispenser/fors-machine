@@ -15,14 +15,14 @@ public class LoadInstruction : Instruction
 {
     public Register PRegister { get; set; }
 
-    public AssemblyExpression Argument { get; set; }
+    public Value Argument { get; set; }
 
     public bool IsArgumentAddress { get; set; }
 
     public LoadInstruction(
         Token<TokenType> source,
         Register pRegister,
-        AssemblyExpression argument,
+        Value argument,
         bool isArgumentAddress) : base(source)
     {
         PRegister = pRegister;
@@ -30,7 +30,7 @@ public class LoadInstruction : Instruction
         IsArgumentAddress = isArgumentAddress;
     }
 
-    public override uint ToInstruction()
+    public override uint ToInstruction(Dictionary<string, uint> symTable)
     {
         uint instruction = 0x00;
         ushort arg = 0x0000;
@@ -41,16 +41,15 @@ public class LoadInstruction : Instruction
         }
         IList<int> t = new List<int>();
 
+        arg = (ushort)Argument.Evaluate(symTable);
+
         if (Argument is Constant immediate)
         {
             instruction = 0x01;
-            arg = (ushort)immediate.Value;
         }
         else if (Argument is Register qRegister)
         {
-            // 0x02 p q 0x00
             instruction = 0x02;
-            arg = qRegister.Address;
             arg = (ushort)(arg << 8);
         }
         else

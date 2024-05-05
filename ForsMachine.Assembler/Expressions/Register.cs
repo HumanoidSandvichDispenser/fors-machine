@@ -2,7 +2,7 @@ using ForsMachine.Utils;
 
 namespace ForsMachine.Assembler.Expressions;
 
-public class Register : AssemblyExpression, ILoadArgument
+public class Register : Value, ILoadArgument
 {
     public byte Address { get; set; }
 
@@ -10,4 +10,6 @@ public class Register : AssemblyExpression, ILoadArgument
     {
         Address = address;
     }
+
+    public override uint Evaluate(Dictionary<string, uint> _) => Address;
 }
