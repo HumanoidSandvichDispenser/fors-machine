@@ -35,21 +35,33 @@
 	load r{p: register}, &r{q: register}, {offset: s8} => 0x04 @ p @ q @ offset
 
 	push {value: i16} => {
-		asm { load r0, value } @
-		asm { store r0, &rsp } @
-		asm { load r0, 1 } @
-		asm { add rsp, rsp, r0 }
+		asm {
+			incr rsp, rsp, 1
+			load r0, { value }
+			store r0, &rsp
+		}
 	}
 	push r{register: register} => {
-		asm { load r0, r{register} } @
-		asm { store r0, &rsp } @
-		asm { load r0, 1 } @
-		asm { add rsp, rsp, r0 }
+		asm {
+			incr rsp, rsp, 1
+			store r{ register }, &rsp
+		}
+	}
+	push_rpc => {
+		asm {
+			load r0, rpc
+			incr r0, r0, 5
+			push r0
+		}
 	}
 	pop r{register: register} => {
-		asm { load r0, 1 } @
-		asm { sub rsp, rsp, r0 } @
-		asm { load r{register}, &rsp }
+		asm {
+			load r{register}, &rsp
+			pop
+		}
+	}
+	pop => {
+		asm { incr rsp, rsp, -1 }
 	}
 	leave => asm { load rsp, rbp }
 
@@ -67,6 +79,11 @@
 	mul r{p: register}, r{q: register}, r{r: register} => 0x26 @ p @ q @ r
 	div r{p: register}, r{q: register}, r{r: register} => 0x27 @ p @ q @ r
 	mod r{p: register}, r{q: register}, r{r: register} => 0x28 @ p @ q @ r
+	lshift r{p: register}, r{q: register}, r{r: register} => 0x29 @ p @ q @ r
+	rshift r{p: register}, r{q: register}, r{r: register} => 0x2a @ p @ q @ r
+	lshift r{p: register}, r{q: register}, {value: i8} => 0x2b @ p @ q @ value
+	rshift r{p: register}, r{q: register}, {value: i8} => 0x2c @ p @ q @ value
+	incr r{p: register}, r{q: register}, {value: i8} => 0x2d @ p @ q @ value
 
 	cmp r{p: register}, r{q: register}, r{r: register} => 0x40 @ p @ q @ r
 	scmp r{p: register}, r{q: register}, r{r: register} => 0x41 @ p @ q @ r
