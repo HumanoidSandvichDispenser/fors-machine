@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <circuit>
-  <version>1</version>
+  <version>2</version>
   <attributes/>
   <visualElements>
     <visualElement>
@@ -59,7 +59,7 @@
         </entry>
         <entry>
           <string>Data</string>
-          <data>1010001,1020001,24000102,2020100,2010000,50000002</data>
+          <data>1010034,11010005,3000005</data>
         </entry>
       </elementAttributes>
       <pos x="60" y="260"/>
@@ -68,16 +68,16 @@
       <elementName>Out</elementName>
       <elementAttributes>
         <entry>
-          <string>intFormat</string>
-          <intFormat>hex</intFormat>
+          <string>rotation</string>
+          <rotation rotation="2"/>
         </entry>
         <entry>
           <string>Bits</string>
           <int>16</int>
         </entry>
         <entry>
-          <string>rotation</string>
-          <rotation rotation="2"/>
+          <string>intFormat</string>
+          <intFormat>hex</intFormat>
         </entry>
       </elementAttributes>
       <pos x="-80" y="300"/>
@@ -101,12 +101,12 @@
       <elementName>Clock</elementName>
       <elementAttributes>
         <entry>
-          <string>Frequency</string>
-          <int>200</int>
-        </entry>
-        <entry>
           <string>runRealTime</string>
           <boolean>true</boolean>
+        </entry>
+        <entry>
+          <string>Frequency</string>
+          <int>5</int>
         </entry>
       </elementAttributes>
       <pos x="220" y="300"/>

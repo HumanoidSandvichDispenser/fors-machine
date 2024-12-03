@@ -5,11 +5,12 @@ FORS Instruction Set
     [x] 0x01 p 2m               LOAD m -> p
     [x] 0x02 p q 0x00           LOAD register q -> p
     [x] 0x03 p 2a               LOAD from memory address a -> register p
-    [x] 0x04 p q 0x00           LOAD from memory address in register q -> register p
+    [x] 0x04 p q +a             LOAD from memory address in register q + offset a -> register p
 
 0x10 - STORE
-    [x] 0x10 m 2a               STORE m into memory address a (stoc)
-    [x] 0x11 p 2a               STORE register p into memory address a (stor)
+    [x] 0x10 m 2a               STORE m into memory address a
+    [x] 0x11 p 2a               STORE register p into memory address a
+    [x] 0x12 p q +a             STORE register p into memory address in register q + offset a
 
 0x20 - ARITHMETIC
     [x] 0x20 p q r              q & r -> p
