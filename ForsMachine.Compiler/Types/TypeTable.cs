@@ -1,20 +1,46 @@
 namespace ForsMachine.Compiler.Types;
 
-public class TypeTable : Dictionary<string, Type>
+public class TypeTable
 {
-    public new Type this[string key]
+    private Dictionary<string, Type> _types = new();
+
+    private Dictionary<string, PrimitiveType> _primitiveTypes = new();
+
+    public Dictionary<string, Type> Dump()
+    {
+        return new Dictionary<string, Type>(_types);
+    }
+
+    public Type this[string key]
     {
         get
         {
-            if (!ContainsKey(key))
+            if (!_types.ContainsKey(key))
             {
                 throw new Exceptions.TypeNotFoundException(key);
             }
-            return base[key];
+            return _types[key];
         }
         set
         {
-            base[key] = value;
+            _types[key] = value;
+            if (value is PrimitiveType primitive)
+            {
+                _primitiveTypes[key] = primitive;
+            }
+            else if (_primitiveTypes.ContainsKey(key))
+            {
+                _primitiveTypes.Remove(key);
+            }
         }
+    }
+
+    public PrimitiveType GetPrimitiveType(string key)
+    {
+        if (!_primitiveTypes.ContainsKey(key))
+        {
+            throw new Exceptions.TypeNotFoundException(key);
+        }
+        return _primitiveTypes[key];
     }
 }

@@ -11,6 +11,7 @@ public static class TypeSystem
     {
         Types["int16"] = new Types.Int16();
         Types["pointer"] = new Pointer();
+        Types["unknown"] = new UnknownType();
     }
 
     public static void RegisterStruct(string name, SortedDictionary<string, string> attributes)
@@ -32,7 +33,7 @@ public static class TypeSystem
     public static string Dump()
     {
         var builder = new StringBuilder();
-        foreach (var type in Types)
+        foreach (var type in Types.Dump())
         {
             if (type.Value is TypeStruct typeStruct)
             {
