@@ -30,4 +30,17 @@ public class CharIterator : Iterator<char>
         }
         return c;
     }
+
+    public override void MoveBack()
+    {
+        if (_elements[Index] == '\n')
+        {
+            Line--;
+        }
+        else
+        {
+            Column--;
+        }
+        base.MoveBack();
+    }
 }

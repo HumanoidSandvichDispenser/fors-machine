@@ -11,23 +11,33 @@ public class Conditional : Procedure
     public Conditional(Expression condition, Expression onTrue, Expression? onFalse)
         : base("conditional", onTrue.Type, false)
     {
-        if (condition.Type is not Types.PrimitiveType)
-        {
-            throw new Exceptions.TypeNotPrimitiveException(condition.Type);
-        }
-
-        if (onFalse is not null && onTrue.Type != onFalse.Type)
-        {
-            throw new Exceptions.TypeMismatchException(onTrue.Type, onFalse.Type);
-        }
-
         Condition = condition;
         OnTrue = onTrue;
         OnFalse = onFalse;
     }
 
+    private void ResolveTypes(StackFrame sf)
+    {
+        if (Condition.Type is not Types.PrimitiveType)
+        {
+            throw new Exceptions.TypeNotPrimitiveException(Condition.Type);
+        }
+
+        if (OnFalse is not null && OnTrue.Type != OnFalse.Type)
+        {
+            throw new Exceptions.TypeMismatchException(OnTrue.Type, OnFalse.Type, sf);
+        }
+
+        Type = OnTrue.Type;
+    }
+
     private IEnumerable<string> GenerateBody(StackFrame? stackFrame, bool shouldLoad)
     {
+        if (stackFrame is null)
+        {
+            throw new NullReferenceException("StackFrame is null");
+        }
+
         List<string> asm = new();
 
         string hash = GetHashCode().ToString();
@@ -52,6 +62,8 @@ public class Conditional : Procedure
             .Select(x => $"\t{x}");
         asm.AddRange(trueAsm);
         asm.Add($"{endLabel}:");
+
+        ResolveTypes(stackFrame);
 
         return asm;
     }

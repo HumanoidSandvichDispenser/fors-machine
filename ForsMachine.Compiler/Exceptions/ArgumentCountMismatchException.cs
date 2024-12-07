@@ -8,7 +8,7 @@ public class ArgumentCountMismatchException : AbstractCompilerException
         string procedureName,
         int expected,
         int actual,
-        StackFrame? trace = null
+        StackFrame? trace
     )
         : base(
             $"Proceudre \"{procedureName}\" expected {expected} arguments, but got {actual}.",

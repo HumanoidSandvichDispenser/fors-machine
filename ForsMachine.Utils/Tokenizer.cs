@@ -56,7 +56,7 @@ public abstract class Tokenizer<TokenType> where TokenType : System.Enum
             iterator.Line, iterator.Column);
     }
 
-    public static string ScanNumber(CharIterator iterator, string begin = "")
+    protected static string ScanNumber(CharIterator iterator, string begin = "")
     {
         bool hasPoint = false;
         Regex numberBase = REGEX_NUMBER_DEC;
@@ -97,10 +97,6 @@ public abstract class Tokenizer<TokenType> where TokenType : System.Enum
                 }
                 hasPoint = true;
                 begin += c;
-            }
-            else if (c == ',')
-            {
-                continue;
             }
             else if (numberBase.IsMatch(c.ToString()))
             {

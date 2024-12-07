@@ -1,3 +1,5 @@
+using ForsMachine.Utils;
+
 namespace ForsMachine.Compiler;
 
 public class StackFrame
@@ -5,13 +7,40 @@ public class StackFrame
     /// <summary>
     /// The bindings of each name to a memory address offset.
     /// </summary>
-    public Dictionary<string, Stack<OffsetBinding>> Bindings { get; set; } = new();
+    //public Dictionary<string, Stack<OffsetBinding>> Bindings { get; set; } = new();
+
+    public StackFrame? Parent { get; set; }
+
+    private Scope _activeScope = new();
+
+    public static Queue<string[]> AsmQueue { get; set; } = new();
+
+    public static Dictionary<string, Procedures.Procedure> Procedures { get; set; } = new();
+
+    public static void RegisterProcedure(Procedures.Procedure procedure)
+    {
+        Procedures[procedure.Name] = procedure;
+    }
+
+    public Expression? GetCompileTimeBinding(string name)
+    {
+        return _activeScope.GetCompileTimeBinding(name, this);
+    }
+
+    public Expression CreateCompileTimeBinding(string name, Expression expression)
+    {
+        return _activeScope.CreateCompileTimeBinding(name, expression);
+    }
+
+    public Procedures.Function? AssociatedFunction { get; set; }
 
     internal string Identifier { get; set; }
 
     private int _size = 1;
 
-    public StackFrame(string identifier, SortedDictionary<string, Types.Type>? parameters)
+    private int _parameterBottom = -1;
+
+    public StackFrame(StackFrame? parent, string identifier, OrderedDictionary<string, Types.Type>? parameters)
     {
         Identifier = identifier;
         int offset = -2;
@@ -19,8 +48,7 @@ public class StackFrame
         {
             foreach (var (name, type) in parameters)
             {
-                Bindings[name] = new();
-                Bindings[name].Push(new(type, offset));
+                _activeScope.CreateBinding(name, type, offset);
                 offset -= type.Size;
             }
         }
@@ -36,11 +64,7 @@ public class StackFrame
 
     public OffsetBinding GetBinding(string name)
     {
-        if (!Bindings.ContainsKey(name))
-        {
-            throw new Exceptions.InvalidBindingException(name);
-        }
-        return Bindings[name].Peek();
+        return _activeScope.GetBinding(name, this);
     }
 
     /// <summary>
@@ -48,15 +72,31 @@ public class StackFrame
     /// </summary>
     public int CreateBinding(string name, Types.Type type)
     {
-        if (!Bindings.ContainsKey(name))
+        var binding = _activeScope.CreateBinding(name, type, _size);
+        _size += type.Size;
+        return binding;
+    }
+
+    public int CreateParameter(string name, Types.Type type)
+    {
+        _parameterBottom -= type.Size;
+        return _activeScope.CreateBinding(name, type, _parameterBottom);
+    }
+
+    public void EnterScope()
+    {
+        _activeScope = new(_activeScope);
+    }
+
+    public void ExitScope()
+    {
+        if (_activeScope.Parent is null)
         {
-            Bindings[name] = new();
+            // this is usually not the fault of the user/programmer
+            throw new InvalidOperationException();
         }
 
-        Bindings[name].Push(new(type, _size));
-        _size += type.Size;
-
-        return GetBindingOffset(name);
+        _activeScope = _activeScope.Parent;
     }
 
     // format, relative to rbp:
@@ -103,7 +143,27 @@ public class StackFrame
     public string DumpState()
     {
         var title = $"Stack Frame({_size}) - {Identifier}";
-        var bindings = String.Join('\n', Bindings.Select(kvp => $"{kvp.Key}: {kvp.Value.Peek()}"));
-        return $"{title}\n{bindings}";
+        string bindings = "";
+        for (var scope = _activeScope; scope is not null; scope = scope.Parent)
+        {
+            bindings += "---\n";
+            bindings += String.Join('\n', scope.Bindings.Select(kvp => $"{kvp.Key}: {kvp.Value.Offset}"));
+        }
+
+        var parent = Parent?.DumpState() ?? "";
+        return $"{title}\n{bindings}" + (Parent is not null ? $"\n===\n{parent}" : "");
+    }
+
+    public static void EnqueueInstructions(string[] asm)
+    {
+        AsmQueue.Enqueue(asm);
+    }
+
+    public static IEnumerable<string[]> DequeueInstructions()
+    {
+        while (AsmQueue.TryDequeue(out string[]? asm))
+        {
+            yield return asm;
+        }
     }
 }

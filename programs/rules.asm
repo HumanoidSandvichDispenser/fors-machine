@@ -27,6 +27,7 @@
 #ruledef
 {
 	nop => 0x00000000
+	halt => 0xFFFFFFFF
 
 	load r{register: register}, {value: i16} => 0x01 @ register @ value
 	load r{p: register}, r{q: register} => 0x02 @ p @ q @ 0x00

@@ -4,13 +4,21 @@ public class Bind : Procedure
 {
     public string BindingName { get; set; }
 
+    public string TypeName { get; set; }
+
     public Expression Value { get; set; }
 
-    public Bind(string name, Expression value)
-        : base("bind", value.Type, false)
+    public Bind(string name, string type, Expression value)
+        : base("bind", Types.TypeSystem.Types["unknown"], false)
     {
         BindingName = name;
         Value = value;
+        TypeName = type;
+    }
+
+    public void ResolveType()
+    {
+        Type = Types.TypeSystem.Types[TypeName];
     }
 
     public override string[] GenerateAsm(StackFrame? stackFrame, bool shouldLoad = false)
@@ -20,7 +28,9 @@ public class Bind : Procedure
             throw new NullReferenceException(nameof(stackFrame));
         }
 
-        int offset = stackFrame.CreateBinding(BindingName, Value.Type);
+        ResolveType();
+
+        int offset = stackFrame.CreateBinding(BindingName, Type);
 
         string allocation = $"incr rsp, rsp, {Type.Size}  ; allocate {BindingName}";
         string[] store;

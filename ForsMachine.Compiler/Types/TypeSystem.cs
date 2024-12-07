@@ -1,3 +1,4 @@
+using ForsMachine.Utils;
 using System.Linq;
 using System.Text;
 
@@ -12,9 +13,10 @@ public static class TypeSystem
         Types["int16"] = new Types.Int16();
         Types["pointer"] = new Pointer();
         Types["unknown"] = new UnknownType();
+        Types["function"] = new FunctionPointerType();
     }
 
-    public static void RegisterStruct(string name, SortedDictionary<string, string> attributes)
+    public static void RegisterStruct(string name, OrderedDictionary<string, string> attributes)
     {
         var keypairs = attributes
             .Select((attribute) =>
@@ -22,7 +24,7 @@ public static class TypeSystem
                     attribute.Key, Types[attribute.Value]
                 ));
 
-        var typedAttributes = new SortedDictionary<string, Type>();
+        var typedAttributes = new Utils.OrderedDictionary<string, Type>();
         foreach (var keypair in keypairs)
         {
             typedAttributes[keypair.Key] = keypair.Value;

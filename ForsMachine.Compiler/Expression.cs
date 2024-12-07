@@ -1,8 +1,12 @@
 namespace ForsMachine.Compiler;
 
-public abstract class Expression
+public abstract class Expression : ISourceLocation
 {
     public virtual Types.Type Type { get; set; }
+
+    public int? Line { get; set; }
+
+    public int? Column { get; set; }
 
     public Expression(Types.Type type)
     {
