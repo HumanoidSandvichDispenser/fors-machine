@@ -16,6 +16,7 @@ public class Tokenizer : ForsMachine.Utils.Tokenizer<TokenType>
         "operation",
         "else",
         "defer",
+        "mutate",
     };
 
     public readonly HashSet<char> GROUPING = new HashSet<char> { '(', ')', '{', '}', '[', ']', };

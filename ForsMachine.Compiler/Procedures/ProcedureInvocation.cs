@@ -88,9 +88,10 @@ public class ProcedureInvocation : Expression
             throw new NotImplementedException();
         }
 
-        var evaluatedArgs = args?.Reverse()
-            .SelectMany(x => x.GenerateAsm(stackFrame, true).Append("push rax"))
-            .ToArray();
+        //var evaluatedArgs = args?.Reverse()
+        //    .SelectMany(x => x.GenerateAsm(stackFrame, true).Append("push rax"))
+        //    .ToArray();
+        var evaluatedArgs = Procedure.EvaluateArgs(stackFrame, args);
 
         // if the procedure is an operation, we can just append its assembly
 

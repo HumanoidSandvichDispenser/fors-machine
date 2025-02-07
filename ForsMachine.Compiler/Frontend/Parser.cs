@@ -94,6 +94,9 @@ public class Parser
                     Consume();
                     expression = new Procedures.Defer(ParseExpression());
                     break;
+                case "mutate":
+                    Consume();
+                    return Procedures.MutationOperation.Mutate;
                 default:
                     var msg = $"Keyword '{_currentToken.Value}' is not valid in this context.";
                     throw new Exceptions.SyntaxException(msg, _currentToken);

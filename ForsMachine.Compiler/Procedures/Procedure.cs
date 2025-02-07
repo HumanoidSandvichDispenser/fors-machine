@@ -29,4 +29,11 @@ public abstract class Procedure : Expression
     }
 
     public abstract override string[] GenerateAsm(StackFrame? stackFrame, bool shouldLoad = false);
+
+    public virtual string[]? EvaluateArgs(StackFrame? stackFrame, IEnumerable<Expression>? args)
+    {
+        return args?.Reverse()
+            .SelectMany(x => x.GenerateAsm(stackFrame, true).Append("push rax"))
+            .ToArray();
+    }
 }
